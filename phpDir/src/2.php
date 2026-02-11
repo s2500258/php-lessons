@@ -34,6 +34,8 @@ $sum = $number1 + $number2;
 echo "The sum is $sum";
 
 $numbersArray = array(10, 20);
+echo "<br>";
+echo "The array is ".implode(", ", $numbersArray);
 
 $numbersAssoc = array(
     "first" => 10,

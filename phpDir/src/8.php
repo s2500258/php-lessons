@@ -26,6 +26,11 @@
 		Step 4 - echo the variable
 
 	*/
+
+	$textToEncrypt = "Hello1111";
+	$salt = "98";
+	$encryptedText = crypt($textToEncrypt, $salt);
+	echo $encryptedText;
 	
 	?>
 
