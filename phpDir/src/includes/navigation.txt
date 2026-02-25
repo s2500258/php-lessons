@@ -12,3 +12,4 @@ Practice Section 9:9.php
 Practice Section 10:10.php
 Practice Section 11:11-authentification.php
 Practice Section 12:12-ai.php
+Products Demo:12-products.php

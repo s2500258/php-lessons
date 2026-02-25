@@ -242,7 +242,7 @@ if ($auth && $auth->isLoggedIn()) {
         <?php endif; ?>
 
         <?php if ($success): ?>
-            <div class="success"><?= htmlspecialchars($success) ?></div>
+        ß    <div class="success"><?= htmlspecialchars($success) ?></div>
         <?php endif; ?>
 
         <!-- User Info -->
