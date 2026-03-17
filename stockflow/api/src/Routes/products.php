@@ -48,6 +48,32 @@ $app->get('/api/products', function (Request $request, Response $response) {
     // $category = $params['category'] ?? null;
     // ... then build $queryParams based on what was sent
 
+
+    $params = $request->getQueryParams();
+    $search = $params['search'] ?? null;
+    $category = $params['category'] ?? null;    
+    $status = $params['status'] ?? null;
+    $sort = $params['sort'] ?? 'name';
+    $order = $params['order'] ?? 'asc'; 
+    $page = (int)($params['page'] ?? 1);
+    $limit = (int)($params['limit'] ?? 10);
+    $queryParams = [
+        'select' => '*,categories(name)',
+        'order' => $sort . '.' . $order,
+        'limit' => $limit,
+        'offset' => ($page - 1) * $limit
+    ];
+
+    if ($search) {
+        $queryParams['name'] = 'ilike.%' . $search . '%';
+    }
+
+    if ($status) {
+        $queryParams['status'] = 'eq.' . $status;
+    }
+
+    $products = $auth->query('products', $queryParams);
+
     // Current query — fetches everything, no filtering
     $products = $auth->query('products', [
         'select' => '*,categories(name)',
@@ -58,6 +84,25 @@ $app->get('/api/products', function (Request $request, Response $response) {
     // TODO: Transform $products before sending to the frontend
     // Example: $processed = array_map(function ($product) { ... }, $products);
     // Then return $processed instead of $products
+
+    $proccessed = array_map(function ($product) {
+       return [
+        'id' => $product['id'],
+        'name' => $product['name'],
+        'sku' => $product['sku'],
+        'price' => number_format($product['price'], 2),
+        'category_name' => $product['categories']['name'] ?? 'Uncategorized',
+        'image_url' => $product['image_url'] ?? null,
+        'supplier' => $product['supplier'],
+        'reorder_threshold' => $product['reorder_threshold'],
+        'description' => $product['description'] ?? null,
+        'stock_quantity' => $product['stock_quantity'],
+        'status' => $product['status'],
+       ];
+    }, $products);
+
+
+
 
     $response->getBody()->write(json_encode($products));
     return $response->withHeader('Content-Type', 'application/json');
