@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../services/api';
 
 /**
@@ -28,6 +28,7 @@ export default function ProductForm({ product = null, onSaved = () => {} }) {
     description: product?.description || '',
     category_id: product?.category_id || '',
   });
+  const [categories, setCategories] = useState([]);
 
   // Image state
   const [imageFile, setImageFile] = useState(null);
@@ -36,6 +37,12 @@ export default function ProductForm({ product = null, onSaved = () => {} }) {
 
   const [message, setMessage] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    api.getCategories()
+      .then((data) => setCategories(Array.isArray(data) ? data : data.data || []))
+      .catch(() => setCategories([]));
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -110,8 +117,11 @@ export default function ProductForm({ product = null, onSaved = () => {} }) {
         <textarea name="description" placeholder="Description (optional)" value={form.description} onChange={handleChange} rows={3} />
         <select name="category_id" value={form.category_id} onChange={handleChange}>
           <option value="">Select category...</option>
-          {/* In a real app, you'd fetch categories from the API.
-              For now, students can hardcode or ignore this field. */}
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
         </select>
 
         {/* Image upload */}
