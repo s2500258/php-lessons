@@ -15,3 +15,15 @@ docker-compose up
 # Use for reference
 
 Use solely for reference material only
+
+
+In stockflow/api:
+php -S localhost:8005 -t public/
+
+in client/@:
+npm run dev
+
+in env file we check CLIENT_URL=http://localhost:5173  port number
+
+
+git remote set-url origin https://github.com/martin-holland/php-lessons.git
